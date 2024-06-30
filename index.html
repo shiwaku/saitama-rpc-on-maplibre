@@ -104,18 +104,28 @@
 
         map.on('load', () => {
             // MapboxOverlayを使ったインターリーブ
-            // 3次元点群データ
+            // 道路点群データ
             const overlay = new deck.MapboxOverlay({
                 interleaved: true,
                 layers: [
                     new deck.Tile3DLayer({
-                        id: "tile3dlayer",
+                        id: "tile3dlayer-1",
                         pointSize: 1,
                         data: 'https:///shiworks.xsrv.jp/3dtiles/saitama-rpc/01d0122-014/tileset.json', // 埼玉県 道路点群データ
                         loader: Tiles3DLoader,
                         onTileLoad: d => {
                             const { content } = d;
                             content.cartographicOrigin.z -= 5;
+                        }
+                    }),
+                    new deck.Tile3DLayer({
+                        id: "tile3dlayer-2",
+                        pointSize: 1,
+                        data: 'https:///shiworks.xsrv.jp/3dtiles/saitama-rpc/03d3229-001/tileset.json', // 埼玉県 道路点群データ
+                        loader: Tiles3DLoader,
+                        onTileLoad: d => {
+                            const { content } = d;
+                            content.cartographicOrigin.z -= 20;
                         }
                     })
                 ],

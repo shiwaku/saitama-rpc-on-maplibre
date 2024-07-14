@@ -46,11 +46,12 @@
         const map = new maplibregl.Map({
             container: 'map',
             style: 'std.json',
+            // style: 'skeleton.json',
             hash: true,
-            zoom: 19.28,
-            center: [139.7368527, 35.8184466],
-            pitch: 67,
-            bearing: -141.2,
+            zoom: 21.01,
+            center: [139.177472, 35.9497779],
+            pitch: 78,
+            bearing: -29.3,
             maxPitch: 85,
             attributionControl: false,
         })
@@ -86,6 +87,14 @@
             })
         );
 
+        // 3D地形コントロール表示
+        map.addControl(
+            new maplibregl.TerrainControl({
+                source: 'aist-dem-terrain-rgb',
+                exaggeration: 1 // 標高を強調する倍率
+            })
+        );
+
         // 環境光を作成
         const ambientLight = new deck.AmbientLight({
             color: [255, 255, 255],
@@ -103,10 +112,24 @@
         const lightingEffect = new deck.LightingEffect({ ambientLight, directionalLight });
 
         map.on('load', () => {
+            // 標高タイルソース
+            map.addSource("aist-dem-terrain-rgb", {
+                type: 'raster-dem',
+                tiles: ['https://gsj-seamless.jp/seamless/elev/php/terrainRGB.php?url='
+                    + 'https://tiles.gsj.jp/tiles/elev/mixed/{z}/{y}/{x}.png',
+                ],
+                attribution: '<a href="https://tiles.gsj.jp/tiles/elev/tiles.html" target="_blank">産総研 シームレス標高タイル(統合DEM)</a>',
+                tileSize: 256,
+                maxzoom: 17
+            });
+
+            // 標高タイルセット
+            map.setTerrain({ 'source': 'aist-dem-terrain-rgb', 'exaggeration': 1 });
+
             // MapboxOverlayを使ったインターリーブ
             // 道路点群データ
             const overlay = new deck.MapboxOverlay({
-                interleaved: true,
+                interleaved: false,
                 layers: [
                     new deck.Tile3DLayer({
                         id: "tile3dlayer-1",
@@ -115,17 +138,27 @@
                         loader: Tiles3DLoader,
                         onTileLoad: d => {
                             const { content } = d;
-                            content.cartographicOrigin.z -= 5;
+                            content.cartographicOrigin.z -= 0;
                         }
                     }),
                     new deck.Tile3DLayer({
                         id: "tile3dlayer-2",
                         pointSize: 1,
-                        data: 'https:///shiworks.xsrv.jp/3dtiles/saitama-rpc/03d3229-001/tileset.json', // 埼玉県 道路点群データ
+                        data: 'https://shiworks.xsrv.jp/3dtiles/saitama-rpc/03d3229-001/tileset.json', // 埼玉県 道路点群データ
                         loader: Tiles3DLoader,
                         onTileLoad: d => {
                             const { content } = d;
-                            content.cartographicOrigin.z -= 20;
+                            content.cartographicOrigin.z -= 0;
+                        }
+                    }),
+                    new deck.Tile3DLayer({
+                        id: "tile3dlayer-3",
+                        pointSize: 1,
+                        data: 'https://shiworks.xsrv.jp/3dtiles/saitama-rpc/04d0299-010/tileset.json', // 埼玉県 道路点群データ
+                        loader: Tiles3DLoader,
+                        onTileLoad: d => {
+                            const { content } = d;
+                            content.cartographicOrigin.z -= 0;
                         }
                     })
                 ],

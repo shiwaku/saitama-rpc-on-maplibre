@@ -1,0 +1,12 @@
+{
+  "pipeline": [
+    {
+      "type": "readers.las",
+      "filename": "las/*.las"
+    },
+    {
+      "type": "writers.las",
+      "filename": "merged.las"
+    }
+  ]
+}

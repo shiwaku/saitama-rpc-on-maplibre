@@ -1,0 +1,21 @@
+[
+  {
+    "type": "readers.las",
+    "filename": "merged.las",
+    "spatialreference": "EPSG:6669"
+  },
+  {
+    "type": "filters.reprojection",
+    "in_srs": "EPSG:6677",
+    "out_srs": "EPSG:6677",
+    "in_axis_ordering": "2, 1"
+  },
+  {
+    "type": "writers.las",
+    "filename": "merged_swaped.las",
+    "forward": "header,scale,vlr",
+    "offset_x": "auto",
+    "offset_y": "auto",
+    "offset_z": "auto"
+  }
+]

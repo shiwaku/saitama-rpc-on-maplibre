@@ -1,6 +1,6 @@
 # 3D Tilesの生成方法
 
-## データの取得
+1. データの取得
 https://www.geospatial.jp/ckan/dataset/road-pointcloud-saitama
 
 ## LASのマージ
